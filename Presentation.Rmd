@@ -2,6 +2,16 @@
 title: "GHG Presentation"
 author: "Maren Rieker, Ania Matysiak, Laura Menicacci"
 date: "2022-11-19"
+output:
+  xaringan::moon_reader:
+    css: [default,'simons-touch.css', metropolis, metropolis-fonts] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+      hash: true
 ---
 
 ```{r setup, include=FALSE}
