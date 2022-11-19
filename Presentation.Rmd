@@ -2,7 +2,6 @@
 title: "GHG Presentation"
 author: "Maren Rieker, Ania Matysiak, Laura Menicacci"
 date: "2022-11-19"
-output: ioslides_presentation
 ---
 
 ```{r setup, include=FALSE}
