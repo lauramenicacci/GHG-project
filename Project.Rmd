@@ -5,26 +5,43 @@ date: "2022-11-19"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = TRUE,
+                      error = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      comment = NA)
 ```
 
-## R Markdown
+This is the code for our final Project for the class *Data Perspectives on Greenhouse Gas Emissions*, taught by Will Lamb and Michael Jakob.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#Outline
+1. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+
+
+Libraries used
+```{r, include = TRUE}
+library(tidyverse)
 ```
 
-## Including Plots
+# 1. The Current Situation
+```{r}
+owid <- read_csv("owid-co2-data.csv")
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+owid %>% 
+  rename(co2_miot = co2) %>%  #make clear that total co2 emissions are measured in million tonnes
+  rename(consumption_co2_miot = consumption_co2) #same for consumption-based emissions
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Play with the plots
+```{r}
+owid %>% 
+  mutate(cucumulative_co2 = summarise(cumulative_co2)) %>% 
+  ggplot(aes(x = cucumulative_co2, y = count)) + #does not work yet
+  geom_bar(position = "stack", stat = "identity")
+```
+
+
