@@ -14,15 +14,31 @@ output:
       hash: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r, include=FALSE}
+
+owid <- read_csv("owid-co2-data.csv")
+
+owid %>% 
+  rename(co2_miot = co2) %>%  #make clear that total co2 emissions are measured in million tonnes
+  rename(consumption_co2_miot = consumption_co2) #same for consumption-based emissions
+  
+owids <- owid %>% 
+  group_by(country) %>% 
+  mutate(cumulatives_co2 = sum(cumulative_co2))
+
+owids %>%  
+  head()
+
+owids %>% colnames()
 ```
 
-## R Markdown
-
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+Play with the plots
+```{r}
+owid %>% 
+  mutate(cucumulative_co2 = summarise(cumulative_co2)) %>% 
+  ggplot(aes(x = cucumulative_co2, y = count)) + #does not work yet
+  geom_bar(position = "stack", stat = "identity")
+```
 
 ## Slide with Bullets
 
@@ -30,15 +46,7 @@ When you click the **Knit** button a document will be generated that includes bo
 - Bullet 2
 - Bullet 3
 
-## Slide with R Output
+```{r}
 
-```{r cars, echo = TRUE}
-summary(cars)
-```
-
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
 ```
 
