@@ -34,6 +34,15 @@ owid <- read_csv("owid-co2-data.csv")
 owid %>% 
   rename(co2_miot = co2) %>%  #make clear that total co2 emissions are measured in million tonnes
   rename(consumption_co2_miot = consumption_co2) #same for consumption-based emissions
+  
+owids <- owid %>% 
+  group_by(country) %>% 
+  mutate(cumulatives_co2 = sum(cumulative_co2))
+
+owids %>%  
+  head()
+
+owids %>% colnames()
 ```
 
 Play with the plots
