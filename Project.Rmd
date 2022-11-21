@@ -20,14 +20,12 @@ This is the code for our final Project for the class *Data Perspectives on Green
 1. 
 
 
-
-
 Libraries used
 ```{r, include = TRUE}
 library(tidyverse)
 ```
 
-# 1. The Current Situation
+# 1. Load and initialise necessary dataset
 ```{r}
 owid <- read_csv("owid-co2-data.csv")
 
