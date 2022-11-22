@@ -24,7 +24,7 @@ How does this change when we look at the regions? Which regions contribute the m
 What are the differences in share between states with the highest and lowest GDP (per capita)?
 
 ```{r}
-owid < -owid%>%mutate(gdp_per_capita=gdp/population)
+owid <-owid%>%mutate(gdp_per_capita=gdp/population)
 ```
 
 ```{r}
@@ -173,13 +173,15 @@ owid_bubbles <- owid %>%
 
 ```{r}
 figure_9 <- owid_bubbles %>%filter(year==2018) %>%  filter(!is.na(gdp_per_capita)&!is.na(cumulative_co2)&!is.na(consumption_co2))%>%arrange(desc(gdp_per_capita)) %>% 
-  head(20) %>% plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
+  head(12) %>% plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
         sizes = c(50, 1000))
 
 figure_9 <- figure_9 %>%
-  layout(title = 'Consumption vs production based emissions (top 20 by GDP per capita)',
+  layout(title = 'Consumption vs production based emissions (top 12 by GDP per capita)',
          xaxis = list(title = 'Production of CO2 in million tonnes'), 
          yaxis = list(title = 'Consumption of CO2 in million tonnes'))
+
+htmlwidgets::saveWidget(figure_9, file = "figure_9.html")
 figure_9
 ```
 
@@ -190,14 +192,15 @@ figure_10 <- owid_bubbles %>%
   filter(year==2018) %>%
   filter(!is.na(gdp_per_capita)&!is.na(cumulative_co2)&!is.na(consumption_co2)) %>%
   arrange(desc(gdp_per_capita)) %>% 
-  top_n(-20) %>% 
+  slice_min(gdp_per_capita,n=12) %>% 
   plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
         sizes = c(50, 1000))
 
-figure_10 <- figure_10 %>%
-  layout(title = 'Consumption vs production based emissions (bottom 20 by GDP per capita)',
+figure_10  <- figure_10  %>%
+  layout(title = 'Consumption vs production based emissions (bottom 12 by GDP per capita)',
          xaxis = list(title = 'Production of CO2 in million tonnes'), yaxis = list(title = 'Consumption of CO2 in million tonnes'))
 figure_10
+htmlwidgets::saveWidget(figure_10, file = "figure_10.html")
 ```
 
 ```{r}

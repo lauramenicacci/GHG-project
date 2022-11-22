@@ -226,6 +226,12 @@ Production-based emissions are wayyyy more!
 ---
 
 # PUT PLOTLY HERE
+<br>
+
+```{r showChoro2, out.extra='style="border:none;"', fig.align="center", echo=FALSE}
+knitr::include_url("figure_9.html")
+```
+
 
 ---
 class: inverse, center, middle 
