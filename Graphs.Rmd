@@ -138,7 +138,7 @@ figure_8<-owid %>% filter(year>1990)%>%
   ggplot(.,aes(x=year,y=cumulative_co2,fill=country)) +
   geom_area(color="#636363", position="fill") +
   theme_bw() +
-  scale_fill_brewer(palette="RdPu") +
+  scale_fill_brewer(palette="BuPu") +
   ylab("") +
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of CO2 production based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
@@ -195,5 +195,3 @@ top_share_production<-with_share_production%>%arrange(desc(gdp_per_capita))%>%sl
 
 top_share_production%>%arrange(desc(share))
 ```
-
-
