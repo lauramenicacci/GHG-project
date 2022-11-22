@@ -40,7 +40,7 @@ figure_1 <- owid %>%
   xlab("") +
   ggtitle("Consumption of CO2 per Region in 2018")+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 1 Consumption by Region 2018", plot = figure_1, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 1 Consumption by Region 2018", plot = figure_1, device = "png", width = 10, height = 8)
 ```
 
 ```{r}
@@ -54,7 +54,7 @@ figure_2 <- owid %>% filter(!is.na(cumulative_co2))%>% filter(country %in% c("Wo
   xlab("") +
   ggtitle("Production of CO2 per Region in 2018")+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 2 Production by Region 2018", plot = figure_2, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 2 Production by Region 2018", plot = figure_2, device = "png", width = 10, height = 8)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -68,7 +68,7 @@ figure_3 <- owid %>%
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of CO2 Consumption across Regions since 1990"))+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 3 share of consumption by region s1990", plot = figure_3, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 3 share of consumption by region s1990", plot = figure_3, device = "png", width = 10, height = 8)
 ```
 
 ```{r}
@@ -83,7 +83,7 @@ figure_4 <- owid %>% filter(year>1990) %>%
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of CO2 Production across Regions since 1990"))+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 4 share of production by region s1990", plot = figure_4, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 4 share of production by region s1990", plot = figure_4, device = "png", width = 10, height = 8)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -108,7 +108,7 @@ figure_5 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("
   xlab("") +
   ggtitle("Consumption of CO2 per country in 2018")
 
-ggsave("Fig. 5 consumption by country 2018", plot = figure_5, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 5 consumption by country 2018", plot = figure_5, device = "png", width = 10, height = 8)
 ```
 
 ```{r}
@@ -124,7 +124,7 @@ figure_6 <- owid %>% filter(!is.na(consumption_co2)) %>%
   xlab("") +
   ggtitle("Production of CO2 per country in 2018")
 
-ggsave("Fig. 6 production by country 2018", plot = figure_6, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 6 production by country 2018", plot = figure_6, device = "png", width = 10, height = 8)
 ```
 
 
@@ -145,7 +145,7 @@ figure_7 <- owid %>% filter(year>1990) %>%
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of consumption based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 7 consumption by income s1990", plot = figure_1, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 7 consumption by income s1990", plot = figure_1, device = "png", width = 10, height = 8)
 
 figure_8 <- owid %>% filter(year>1990) %>%
   filter(country %in% c("High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "Low-income countries")) %>% 
@@ -157,7 +157,7 @@ figure_8 <- owid %>% filter(year>1990) %>%
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of CO2 production based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 8 production by income s1990", plot = figure_1, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 8 production by income s1990", plot = figure_1, device = "png", width = 10, height = 8)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -180,9 +180,10 @@ figure_9 <- owid_bubbles %>%filter(year==2018) %>%  filter(!is.na(gdp_per_capita
 figure_9 <- figure_9 %>%
   layout(title = 'Consumption vs production based emissions (top 12 by GDP per capita)',
          xaxis = list(title = 'Production of CO2 in million tonnes'), 
-         yaxis = list(title = 'Consumption of CO2 in million tonnes'))
+         yaxis = list(title = 'Consumption of CO2 in million tonnes'))%>%  
+  layout(showlegend = FALSE)
 
-htmlwidgets::saveWidget(figure_9, file = "figure_9.html")
+htmlwidgets::saveWidget(figure_9, file = "pics/figure_9.html")
 figure_9
 ```
 
