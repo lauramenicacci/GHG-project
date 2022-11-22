@@ -238,3 +238,42 @@ top_share_production <- with_share_production %>%
 top_share_production %>%
   arrange(desc(share))
 ```
+
+
+```{r}
+
+df<-owid%>% group_by(country, year)%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)", "Oceania", "International transport", "Kuwaiti Oil Fires"))%>%summarise(sum_em=sum(cumulative_co2, na.rm=T))
+
+df2<-df%>%select(country, sum_em, year)%>%mutate(prop=(sum_em/sum(sum_em))*100)
+
+
+figure_11<-df2%>% filter(year>1990)%>% filter(country %in% c("China", "United States", "Germany"))%>%
+  ggplot(.,aes(x=year,y=prop,fill=country)) +
+  geom_area(color="#636363") +
+  theme_bw() +
+  scale_fill_brewer(palette="BuPu") +
+  ylab("% of total share") +
+  theme(axis.title.x=element_blank()) +
+  ggtitle(paste0("trends in overall share in production over time"))+guides(fill=guide_legend(title=" "))
+
+#"Russia", "United Kingdom", "Japan", "India", "France", "Canada"
+
+
+
+df3<-owid%>% group_by(country, year)%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)", "Oceania", "International transport", "Kuwaiti Oil Fires"))%>%summarise(sum_em=sum(consumption_co2, na.rm=T))
+
+df4<-df3%>%select(country, sum_em, year)%>%mutate(prop=(sum_em/sum(sum_em))*100)
+
+
+figure_12<-df4%>% filter(year>1990)%>% filter(country %in% c("China", "United States", "India"))%>%
+  ggplot(.,aes(x=year,y=prop,fill=country)) +
+  geom_area(color="#636363") +
+  theme_bw() +
+  scale_fill_brewer(palette="RdPu") +
+  ylab("% of total share") +
+  theme(axis.title.x=element_blank()) +
+  ggtitle(paste0("Trends in overall share in consumption over time"))+guides(fill=guide_legend(title=" "))
+
+#"Russia", "United Kingdom", "Japan", "India", "France", "Canada"
+
+```
