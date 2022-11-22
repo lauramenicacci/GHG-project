@@ -15,49 +15,40 @@ output:
       ratio: '16:9'
       hash: true
 ---
-<<<<<<< Updated upstream
-```{r, include=FALSE}
+
+```{r setup, include=FALSE}
+# figures formatting setup
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  prompt = T,
+  fig.align="center", #fig.width=6, fig.height=4.5, 
+  # out.width="748px", #out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=F, #echo=F, warning=F, message=F
+  engine.opts = list(bash = "-l")
+  )
+### Next hook based on this SO answer: https://stackoverflow.com/a/39025054
+knit_hooks$set(
+  prompt = function(before, options, envir) {
+    options(
+      prompt = if (options$engine %in% c('sh','bash')) '$ ' else 'R> ',
+      continue = if (options$engine %in% c('sh','bash')) '$ ' else '+ '
+      )
+})
 library(tidyverse)
-library(plotly)
-library(shiny)
 ```
-
-```{r, include=FALSE}
-owid <- read_csv("owid-co2-data.csv")
-
-owid %>% 
-  rename(co2_miot = co2) %>%  #make clear that total co2 emissions are measured in million tonnes
-  rename(consumption_co2_miot = consumption_co2) #same for consumption-based emissions
-  
-owids <- owid %>% 
-  group_by(country) %>% 
-  mutate(cumulatives_co2 = sum(cumulative_co2)) %>% 
-  drop_na()
-=======
 
 
 # Table of contents
 
 <br>
->>>>>>> Stashed changes
 
 1. [Research interest and motivation](#first)
 
 2. [Useful definitions](#definitions)
 
-<<<<<<< Updated upstream
-Play with the plots
-```{r}
-plot <- owid %>% 
-  drop_na() %>% 
-  filter(year == 2018) %>% 
-  mutate(pop = population/1000000, 2) %>% 
-  ggplot(aes(x = co2, y = consumption_co2, size = population, colour = country)) +
-  geom_point()
-```
-=======
 3. [Trends](#trends)
->>>>>>> Stashed changes
 
 4. [Implications: what is best for meeting Paris Agreement targets?](#implications)
 
@@ -99,7 +90,7 @@ HINT: it has to do with responsibility!
 <div align="center">
 <img src="pics/tellmewhy.png" height=300> 
 </div>
-`Credit` [Memes](https://the-memess.blogspot.com/2013/11/backstreet-boys-meme-tell-me-why.html)
+`Source` [Meme](https://the-memess.blogspot.com/2013/11/backstreet-boys-meme-tell-me-why.html)
 ]
 
 
@@ -118,32 +109,46 @@ name: definitions
 
 ## Production-based accounting
 
+
 * Measures emissions generated in the place where goods and services are produced
-
 * Official accounting system used under the UNFCCC Framework
-
 * Calculates emissions that are generated from the domestic production of goods and services irrespective of whether they are consumed domestically or are exported
-
 * Sometimes called 'territorial'
 
---
+
 
 ## Consumption-based accounting
 
-* Measures emissions produced by the final consumption of goods and services 
+* Measures emissions produced by the final consumption of goods and services
 * It is calculated by adding to production-based accounting (PBA) emissions generated to produce
-imported goods and services and subtracting those associated with
-exported goods and services 
+imported goods and services and subtracting those associated with exported goods and services 
+* PBE + Emissions (Import) - Emissions (Export)
+* Accounts for **trade**
+
+---
+
+# Consumption-based accounting is relevant
 
 
-Consumption-based emissions reflect the consumption and lifestyle choices of a country’s citizens. 
-
-
+.pull-left[
+<br>
+<div align="left">
+<img src="pics/share-co2-embedded-in-trade.png" height=400> 
+</div>
+`Credit` [OurWorldInData](https://ourworldindata.org/consumption-based-co2)
+]
 
 --
+.pull-right[
 
-## Why CB accounting is relevant? 
+## Lifestyles and globalisation
 
+* In a globalised world, the transfer of carbon between regions, either physically or embodied in production, represents a substantial fraction of global carbon emissions.
+
+* Emissions produced by international trade are constantly increasing 
+
+* There are **emission importing** and **emission exporting** countries
+]
 
 
 ---
@@ -159,11 +164,68 @@ name: trends
 
 
 
+# Trends and differences
+
+## An overview of consumption vs. production emissions: 
+
+.pull-left-center[
+<br>
+<div align="center">
+<img src="pics/Fig. 1 Consumption by Region 2019" height=400> 
+</div>
+
+]
+
+.pull-right-center[
+<br>
+<div align="center">
+<img src="pics/Fig. 2 Production by Region 2019" height=400> 
+</div>
+]
+
+Production-based emissions are wayyyy more! 
+---
+
+# Share of consumption and consumption by region 
+
+.pull-left-center[
+<br>
+<div align="center">
+<img src="pics/Fig. 3 share of consumption by region s1990" height=400> 
+</div>
+
+]
 
 
-# Here we put plots  
+.pull-right-center[
+<br>
+<div align="center">
+<img src="pics/Fig. 4 share of production by region s1990" height=400> 
+</div>
+]
+
+---
+
+# Consumption by country in the year 2018
+.pull-left-center[
+<br>
+<div align="center">
+<img src="pics/Fig. 5 consumption by country 2018" height=400> 
+</div>
+
+]
 
 
+.pull-right-center[
+<br>
+<div align="center">
+<img src="pics/Fig. 6 production by country 2018" height=400> 
+</div>
+]
+
+---
+
+# PUT PLOTLY HERE
 
 ---
 class: inverse, center, middle 
@@ -182,41 +244,6 @@ name: implications
 - Bullet 2
 - Bullet 3
 
-<<<<<<< Updated upstream
-SHINY SHIT
-```{r}
-ui <- fluidPage(
-  titlePanel("Production based vs. Consumption based CO2 Emissions"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput(inputId = owid$year,
-                  label = "Year",
-                  min = 1990,
-                  max = 2018,
-                  value = 2018)
-    ),
-  mainPanel(
-    plotOutput(outputId = "plot")
-    )
-  )
-)
-
-server <- function(input, output) {
-  output$plot <- renderPlot({
-    data <- switch(input$var,
-                   "Consumption-based" = owid$consumption_co2,
-                   "Production-based" = owid$co2,
-                   "Population" = pop)
-  })
-  
-}
-
-
-# Create Shiny app ----
-shinyApp(ui = ui, server = server)
-```
-=======
 
 ---
 class: inverse, center, middle 
@@ -262,7 +289,7 @@ name: summary
 
 ---
 
-# only if we have time
+# Only if we have time
 
 
 # References 
@@ -277,6 +304,5 @@ data: our world in data
 
 Growth in emission transfers via international trade from 1990 to 2008
 Glen P Peters 1, Jan C Minx, Christopher L Weber, Ottmar Edenhofer
->>>>>>> Stashed changes
 
 Karakaya, E., Yılmaz, B. & Alataş, S. How production-based and consumption-based emissions accounting systems change climate policy analysis: the case of CO2 convergence. Environ Sci Pollut Res 26, 16682–16694 (2019). https://doi.org/10.1007/s11356-019-05007-2
