@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(plotly)
+library(countrycode)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -21,6 +22,10 @@ owid <- read_csv("owid-co2-data.csv")
 Which states contribute to production-based emissions and consumption-based emissions the most? Are these the same states? What are the differences?
 How does this change when we look at the regions? Which regions contribute the most? 
 What are the differences in share between states with the highest and lowest GDP (per capita)?
+
+```{r}
+owid<-owid%>%mutate(gdp_per_capita=gdp/population)
+```
 
 ```{r}
 figure_1 <- owid %>% filter(!is.na(consumption_co2))%>% filter(country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "North America (excl. USA)", "Oceania"))%>%
@@ -83,7 +88,7 @@ figure_4
 
 ```{r}
 figure_5 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)","Oceania" ))%>%
-  filter(year==2019) %>% 
+  filter(year==2018) %>% 
   arrange(desc(consumption_co2)) %>% 
   head(10) %>% 
   ggplot(.,aes(x=consumption_co2,y=reorder(country,consumption_co2))) +
@@ -92,12 +97,12 @@ figure_5 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("
   theme_bw() +
   theme(axis.title.y = element_blank()) +
   xlab("") +
-  ggtitle("Consumption of CO2 per country in 2019")
+  ggtitle("Consumption of CO2 per country in 2018")
 ```
 
 ```{r}
 figure_6 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)",  "Oceania" ))%>%
-  filter(year==2019) %>% 
+  filter(year==2018) %>% 
   arrange(desc(cumulative_co2)) %>% 
   head(10) %>% 
   ggplot(.,aes(x=cumulative_co2,y=reorder(country,cumulative_co2))) +
@@ -105,7 +110,7 @@ figure_6 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("
   theme_bw() +
   theme(axis.title.y = element_blank()) +
   xlab("") +
-  ggtitle("Production of CO2 per country in 2019")
+  ggtitle("Production of CO2 per country in 2018")
 ```
 
 
@@ -124,7 +129,7 @@ figure_7<-owid %>% filter(year>1990)%>%
   scale_fill_brewer(palette="RdPu") +
   ylab("") +
   theme(axis.title.x=element_blank()) +
-  ggtitle(paste0("Share of CO2 consumption across by income"))+guides(fill=guide_legend(title=" "))
+  ggtitle(paste0("Share of consumption based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
 
 
 
@@ -136,7 +141,7 @@ figure_8<-owid %>% filter(year>1990)%>%
   scale_fill_brewer(palette="RdPu") +
   ylab("") +
   theme(axis.title.x=element_blank()) +
-  ggtitle(paste0("Share of CO2 production by income"))+guides(fill=guide_legend(title=" "))
+  ggtitle(paste0("Share of CO2 production based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -144,18 +149,51 @@ figure_7
 figure_8
 ```
 
-
 ```{r}
-owid%>%filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)", "Oceania")) %>%filter(year==2018)%>%  arrange(desc(cumulative_co2)) %>% 
-  head(20) %>% plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp, color = ~country, colors = 'Paired',
-        sizes = c(50, 1000))
-```
-
-```{r}
-library(countrycode)
-owid_bubbles<- owid %>%  filter(!is.na(country))%>%
+owid_bubbles<- owid %>%  filter(!is.na(country))%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)", "Oceania", "International transport", "Kuwaiti Oil Fires"))%>%
   mutate(continent = countrycode(iso_code, origin = "iso3c", destination = "continent"))
 
-
-#filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)", "Oceania"))%>%
 ```
+
+```{r}
+figure_9<-owid_bubbles %>%filter(year==2018)%>%  filter(!is.na(gdp_per_capita)&!is.na(cumulative_co2)&!is.na(consumption_co2))%>%arrange(desc(gdp_per_capita)) %>% 
+  head(20) %>% plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
+        sizes = c(50, 1000))
+
+figure_9<-figure_9 %>%layout(title = 'Consumption vs production based emissions (top 20 by GDP per capita)',
+         xaxis = list(title = 'Production of CO2 in million tonnes'), yaxis = list(title = 'Consumption of CO2 in million tonnes'))
+figure_9
+```
+
+
+
+```{r}
+figure_10<-owid_bubbles%>% filter(year==2018)%>% filter(!is.na(gdp_per_capita)&!is.na(cumulative_co2)&!is.na(consumption_co2))%>% arrange(desc(gdp_per_capita)) %>% 
+  top_n(-20) %>% plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
+        sizes = c(50, 1000))
+
+figure_10<-figure_10 %>%layout(title = 'Consumption vs production based emissions (bottom 20 by GDP per capita)',
+         xaxis = list(title = 'Production of CO2 in million tonnes'), yaxis = list(title = 'Consumption of CO2 in million tonnes'))
+figure_10
+```
+
+```{r}
+
+total<-owid%>%filter(country=="World")%>%filter(year==2018)%>%select(consumption_co2)
+with_share<-owid %>% filter(year==2018)%>%filter(!is.na(gdp_per_capita))%>%mutate(share=(consumption_co2/36646.14)*100)
+top_share<-with_share%>%arrange(desc(gdp_per_capita))%>%slice(1:10)%>%select(country, share)
+
+top_share%>%arrange(desc(share))
+```
+
+
+```{r}
+
+total_production<-owid%>%filter(country=="World")%>%filter(year==2018)%>%select(cumulative_co2)
+with_share_production<-owid %>% filter(year==2018)%>%filter(!is.na(gdp_per_capita))%>%mutate(share=(cumulative_co2/1625014)*100)
+top_share_production<-with_share_production%>%arrange(desc(gdp_per_capita))%>%slice(1:10)%>%select(country, share)
+
+top_share_production%>%arrange(desc(share))
+```
+
+
