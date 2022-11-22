@@ -28,8 +28,9 @@ owid <-owid%>%mutate(gdp_per_capita=gdp/population)
 ```
 
 ```{r}
-figure_1 <- owid %>% filter(!is.na(consumption_co2))%>% filter(country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "North America (excl. USA)", "Oceania"))%>%
-  filter(year==2019) %>% 
+figure_1 <- owid %>% 
+  filter(!is.na(consumption_co2))%>% filter(country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "North America (excl. USA)", "Oceania"))%>%
+  filter(year==2018) %>% 
   arrange(desc(consumption_co2)) %>% 
   ggplot(.,aes(x=consumption_co2,y=reorder(country,consumption_co2))) +
   geom_col(color="#636363",fill="#BD1550") +
@@ -37,23 +38,23 @@ figure_1 <- owid %>% filter(!is.na(consumption_co2))%>% filter(country %in% c("W
   theme_bw() +
   theme(axis.title.y = element_blank()) +
   xlab("") +
-  ggtitle("Consumption of CO2 per region in 2019")+guides(fill=guide_legend(title=" "))
+  ggtitle("Consumption of CO2 per Region in 2018")+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 1 Consumption by Region 2019", plot = figure_1, device = "png", width = 10, height = 8)
+ggsave("Fig. 1 Consumption by Region 2018", plot = figure_1, device = "png", width = 10, height = 8)
 ```
 
 ```{r}
 figure_2 <- owid %>% filter(!is.na(cumulative_co2))%>% filter(country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "North America (excl. USA)", "Oceania"))%>%
-  filter(year==2019) %>% 
+  filter(year==2018) %>% 
   arrange(desc(cumulative_co2)) %>% 
   ggplot(.,aes(x=cumulative_co2,y=reorder(country,cumulative_co2))) +
   geom_col(color="#636363",fill="#490A3D") +
   theme_bw() +
   theme(axis.title.y = element_blank()) +
   xlab("") +
-  ggtitle("Production of CO2 per region in 2019")+guides(fill=guide_legend(title=" "))
+  ggtitle("Production of CO2 per Region in 2018")+guides(fill=guide_legend(title=" "))
 
-ggsave("Fig. 2 Production by Region 2019", plot = figure_2, device = "png", width = 10, height = 8)
+ggsave("Fig. 2 Production by Region 2018", plot = figure_2, device = "png", width = 10, height = 8)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -65,7 +66,7 @@ figure_3 <- owid %>%
   scale_fill_brewer(palette="RdPu") +
   ylab("") +
   theme(axis.title.x=element_blank()) +
-  ggtitle(paste0("Share of CO2 consumption across regions since 1990"))+guides(fill=guide_legend(title=" "))
+  ggtitle(paste0("Share of CO2 Consumption across Regions since 1990"))+guides(fill=guide_legend(title=" "))
 
 ggsave("Fig. 3 share of consumption by region s1990", plot = figure_3, device = "png", width = 10, height = 8)
 ```
@@ -80,7 +81,7 @@ figure_4 <- owid %>% filter(year>1990) %>%
   scale_fill_brewer(palette="BuPu") +
   ylab("") +
   theme(axis.title.x=element_blank()) +
-  ggtitle(paste0("Share of CO2 production across regions since 1990"))+guides(fill=guide_legend(title=" "))
+  ggtitle(paste0("Share of CO2 Production across Regions since 1990"))+guides(fill=guide_legend(title=" "))
 
 ggsave("Fig. 4 share of production by region s1990", plot = figure_4, device = "png", width = 10, height = 8)
 ```
