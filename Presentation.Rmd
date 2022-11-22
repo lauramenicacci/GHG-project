@@ -13,9 +13,13 @@ output:
       ratio: '16:9'
       hash: true
 ---
+```{r, include=FALSE}
+library(tidyverse)
+library(plotly)
+library(shiny)
+```
 
 ```{r, include=FALSE}
-
 owid <- read_csv("owid-co2-data.csv")
 
 owid %>% 
@@ -24,7 +28,8 @@ owid %>%
   
 owids <- owid %>% 
   group_by(country) %>% 
-  mutate(cumulatives_co2 = sum(cumulative_co2))
+  mutate(cumulatives_co2 = sum(cumulative_co2)) %>% 
+  drop_na()
 
 owids %>%  
   head()
@@ -34,10 +39,12 @@ owids %>% colnames()
 
 Play with the plots
 ```{r}
-owid %>% 
-  mutate(cucumulative_co2 = summarise(cumulative_co2)) %>% 
-  ggplot(aes(x = cucumulative_co2, y = count)) + #does not work yet
-  geom_bar(position = "stack", stat = "identity")
+plot <- owid %>% 
+  drop_na() %>% 
+  filter(year == 2018) %>% 
+  mutate(pop = population/1000000, 2) %>% 
+  ggplot(aes(x = co2, y = consumption_co2, size = population, colour = country)) +
+  geom_point()
 ```
 
 ## Slide with Bullets
@@ -46,7 +53,37 @@ owid %>%
 - Bullet 2
 - Bullet 3
 
+SHINY SHIT
 ```{r}
+ui <- fluidPage(
+  titlePanel("Production based vs. Consumption based CO2 Emissions"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(inputId = owid$year,
+                  label = "Year",
+                  min = 1990,
+                  max = 2018,
+                  value = 2018)
+    ),
+  mainPanel(
+    plotOutput(outputId = "plot")
+    )
+  )
+)
 
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    data <- switch(input$var,
+                   "Consumption-based" = owid$consumption_co2,
+                   "Production-based" = owid$co2,
+                   "Population" = pop)
+  })
+  
+}
+
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
 ```
 
