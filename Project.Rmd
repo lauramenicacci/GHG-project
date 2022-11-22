@@ -23,6 +23,12 @@ This is the code for our final Project for the class *Data Perspectives on Green
 Libraries used
 ```{r, include = TRUE}
 library(tidyverse)
+library(gridExtra)
+library(grid)
+library(showtext)
+library(RColorBrewer)
+library(ggrepel)
+library(ggplotlyExtra)
 ```
 
 # 1. Load and initialise necessary dataset
@@ -46,9 +52,11 @@ owids %>% colnames()
 Play with the plots
 ```{r}
 owid %>% 
-  mutate(cucumulative_co2 = summarise(cumulative_co2)) %>% 
-  ggplot(aes(x = cucumulative_co2, y = count)) + #does not work yet
-  geom_bar(position = "stack", stat = "identity")
+  drop_na() %>%
+  filter(year == 1995) %>% 
+  mutate(pop = round(population/1000000, 2)) %>% # round pop by million
+  ggplot(aes(x = co2, y = consumption_co2, size = pop, colour = country)) +
+  geom_point()+ theme_bw()
 ```
 
 
