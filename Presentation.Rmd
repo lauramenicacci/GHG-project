@@ -229,7 +229,7 @@ name: trends
 ---
 # Consumption vs. production
 
-## ..what about income class? Trends since 1990
+## ..what about income group? Trends since 1990
 
 .pull-left-center[
 <br>
