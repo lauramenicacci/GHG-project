@@ -122,7 +122,7 @@ name: definitions
 * Measures emissions produced by the final consumption of goods and services
 * It is calculated by adding to production-based accounting (PBA) emissions generated to produce
 imported goods and services and subtracting those associated with exported goods and services 
-* PBE + Emissions (Import) - Emissions (Export)
+* CBE = PBE + Emissions (Import) - Emissions (Export)
 * Accounts for **trade**
 
 ---
@@ -347,6 +347,8 @@ name: summary
 - Given what you listened today, could you see a role for CB accounting in the international climate policy scenario? If yes, how? 
 
 - Could you imagine examples of consumption-based policies? 
+
+- Do you have any suggestions for further research into this topic?
 
 ## Thanks for listening!!
 
