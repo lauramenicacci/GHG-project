@@ -44,10 +44,10 @@ ggsave("pics/Fig. 1 Consumption by Region 2018", plot = figure_1, device = "png"
 ```
 
 ```{r}
-figure_2 <- owid %>% filter(!is.na(cumulative_co2))%>% filter(country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "North America (excl. USA)", "Oceania"))%>%
+figure_2 <- owid %>% filter(!is.na(co2))%>% filter(country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "North America (excl. USA)", "Oceania"))%>%
   filter(year==2018) %>% 
-  arrange(desc(cumulative_co2)) %>% 
-  ggplot(.,aes(x=cumulative_co2,y=reorder(country,cumulative_co2))) +
+  arrange(desc(co2)) %>% 
+  ggplot(.,aes(x=co2,y=reorder(country,co2))) +
   geom_col(color="#636363",fill="#490A3D") +
   theme_bw() +
   theme(axis.title.y = element_blank()) +
@@ -75,7 +75,7 @@ ggsave("pics/Fig. 3 share of consumption by region s1990", plot = figure_3, devi
 
 figure_4 <- owid %>% filter(year>1990) %>%
   filter(country %in% c("Africa", "North America", "Europe", "South America", "Asia", "Australia", "Asia (excl. China & India)", "North America (excl. USA)", "Oceania")) %>% 
-  ggplot(.,aes(x=year,y=cumulative_co2,fill=country)) +
+  ggplot(.,aes(x=year,y=co2,fill=country)) +
   geom_area(color="#636363", position="fill") +
   theme_bw() +
   scale_fill_brewer(palette="BuPu") +
@@ -112,12 +112,12 @@ ggsave("pics/Fig. 5 consumption by country 2018", plot = figure_5, device = "png
 ```
 
 ```{r}
-figure_6 <- owid %>% filter(!is.na(consumption_co2)) %>% 
+figure_6 <- owid %>% filter(!is.na(co2)) %>% 
   filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)",  "Oceania" )) %>%
   filter(year==2018) %>% 
-  arrange(desc(cumulative_co2)) %>% 
+  arrange(desc(co2)) %>% 
   head(10) %>% 
-  ggplot(.,aes(x=cumulative_co2,y=reorder(country,cumulative_co2))) +
+  ggplot(.,aes(x=co2,y=reorder(country,co2))) +
   geom_col(color="#636363",fill="#490A3D") +
   theme_bw() +
   theme(axis.title.y = element_blank()) +
@@ -145,11 +145,11 @@ figure_7 <- owid %>% filter(year>1990) %>%
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of consumption based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
 
-ggsave("pics/Fig. 7 consumption by income s1990", plot = figure_1, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 7 consumption by income s1990", plot = figure_7, device = "png", width = 10, height = 8)
 
 figure_8 <- owid %>% filter(year>1990) %>%
   filter(country %in% c("High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "Low-income countries")) %>% 
-  ggplot(.,aes(x=year,y=cumulative_co2,fill=country)) +
+  ggplot(.,aes(x=year,y=co2,fill=country)) +
   geom_area(color="#636363", position="fill") +
   theme_bw() +
   scale_fill_brewer(palette="BuPu") +
@@ -157,7 +157,7 @@ figure_8 <- owid %>% filter(year>1990) %>%
   theme(axis.title.x=element_blank()) +
   ggtitle(paste0("Share of CO2 production based CO2 emissions by income"))+guides(fill=guide_legend(title=" "))
 
-ggsave("pics/Fig. 8 production by income s1990", plot = figure_1, device = "png", width = 10, height = 8)
+ggsave("pics/Fig. 8 production by income s1990", plot = figure_8, device = "png", width = 10, height = 8)
 ```
 
 ```{r message=FALSE, warning=FALSE}
@@ -173,8 +173,8 @@ owid_bubbles <- owid %>%
 ```
 
 ```{r}
-figure_9 <- owid_bubbles %>%filter(year==2018) %>%  filter(!is.na(gdp_per_capita)&!is.na(cumulative_co2)&!is.na(consumption_co2))%>%arrange(desc(gdp_per_capita)) %>% 
-  head(12) %>% plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
+figure_9 <- owid_bubbles %>%filter(year==2018) %>%  filter(!is.na(gdp_per_capita)&!is.na(co2)&!is.na(consumption_co2))%>%arrange(desc(gdp_per_capita)) %>% 
+  head(12) %>% plot_ly( x = ~co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
         sizes = c(50, 1000))
 
 figure_9 <- figure_9 %>%
@@ -192,10 +192,10 @@ figure_9
 ```{r}
 figure_10 <- owid_bubbles %>% 
   filter(year==2018) %>%
-  filter(!is.na(gdp_per_capita)&!is.na(cumulative_co2)&!is.na(consumption_co2)) %>%
+  filter(!is.na(gdp_per_capita)&!is.na(co2)&!is.na(consumption_co2)) %>%
   arrange(desc(gdp_per_capita)) %>% 
   slice_min(gdp_per_capita,n=12) %>% 
-  plot_ly( x = ~cumulative_co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
+  plot_ly( x = ~co2, y = ~consumption_co2, type = 'scatter', mode = 'markers', size = ~gdp_per_capita, color = ~country, colors = 'Paired',
         sizes = c(50, 1000))
 
 figure_10  <- figure_10  %>%
