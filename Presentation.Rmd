@@ -1,6 +1,6 @@
 ---
 title: "Production vs. consumption-based accounting for greenhouse gas emissions"
-subtitle: "A data analysis of the implications on responsibility perspectives"
+subtitle: 
 author: "Maren Rieker, Anna Weronika Matysiak, Laura Menicacci"
 institute: "Hertie School | Data Perspectives on Greenhouse Gas Emissions"
 date: "2022-11-23"
@@ -54,15 +54,15 @@ library(tidyverse)
 
 5. [Limitations of this approach](#limitations)
 
-6. [Questions](#questions)
+6. [Summary and discussion](#summary)
 
-7. [To sum up](#summary)
+
 
 ---
 class: inverse, center, middle 
 name: first
 
-# Research interest and outlook 
+# Research interest and motivation 
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
@@ -165,7 +165,7 @@ name: trends
 
 # Consumption vs. production
 
-# ...by regions, in 2018
+## ...by regions, in 2018
 
 .pull-left-center[
 <br>
@@ -187,7 +187,7 @@ name: trends
 
 # Consumption vs. production
 
-# ...overall trend by region since 1990
+## ...overall trend by region since 1990
 
 .pull-left-center[
 <br>
@@ -229,7 +229,7 @@ name: trends
 ---
 # Consumption vs. production
 
-## What about income class? Trends since 1990
+## ..what about income class? Trends since 1990
 
 .pull-left-center[
 <br>
@@ -288,10 +288,11 @@ name: implications
 - As it could resolve for accounting of emissions from aviation and bunker fuels
 ]
 
-.pull-right-center[
-
-![Alt Text](https://tenor.com/it/view/cake-birthday-cake-chocolate-cake-slice-hungry-gif-16721390)
-
+.pull-right[
+<br>
+<div align="right">
+<img src="pics/cake-birthday-cake.gif", height=400> 
+</div>
 ]
 
 ---
@@ -305,19 +306,28 @@ name: limitations
 
 ---
 
-# Possible limitations of a consumption-based approach
+# Limitations of a consumption-based approach
 
-- Effectiveness/efficiency concerns 
+.pull-left[
+- **Effectiveness/efficiency concerns**: including the consumer-side in the policy creation process could result on more harm than good. CB accounting does not necessarily provide a direct link between a country’s actions and changes in emissions. 
 
-- Practical impediments
+- **Practical impediments**: an established system for compiling national emissions inventories through a CB approach has not been implemented yet. 
 
-- Political incompatibility
+- **Political incompatibility**: will developed countries accept liability for emissions they have no control over?
+]
+
+.pull-right[
+<br>
+<div align="right">
+<img src="pics/theoffice.png", height=300> 
+</div>
+]
 
 ---
 class: inverse, center, middle 
 name: summary
 
-# Conclusion
+# Conclusion and discussion
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
 
@@ -333,39 +343,34 @@ name: summary
 
 4. By including international trade in the equation, developing countries have **less responsibility when it comes to mitigation policies**
 
----
-class: inverse, center, middle 
-name: questions
+## Discussion
 
-# What do you think? 
+- Given what you listened today, could you see a role for CB accounting in the international climate policy scenario? If yes, how? 
 
-<html><div style='float:left'></div><hr color='#EB811B' size=1px style="width:1000px; margin:auto;"/></html>
+- Could you imagine examples of consumption-based policies? 
 
-
----
-
-# Q&A
-
-* frame questions for the people
-* put a meme
-
+## Thanks for listening!!
 
 ---
 # Resources
 
-## Data
+## Data used for analysis
 
-Credits to OurWorldIndata! 
+Credits to [OurWorldIndata](https://ourworldindata.org/consumption-based-co2)! 
 
-## References
+Our World in Data based on Friedlingstein, P., O'Sullivan, M., Jones, M. W., Andrew, R. M., Gregor, L., Hauck, J., Le Quéré, C., Luijkx, I. T., Olsen, A., Peters, G. P., Peters, W., Pongratz, J., Schwingshackl, C., Sitch, S., Canadell, J. G., Ciais, P., Jackson, R. B., Alin, S. R., Alkama, R., Arneth, A., Arora, V. K., Bates, N. R., Becker, M., Bellouin, N., Bittig, H. C., Bopp, L., Chevallier, F., Chini, L. P., Cronin, M., Evans, W., Falk, S., Feely, R. A., Gasser, T., Gehlen, M., Gkritzalis, T., Gloege, L., Grassi, G., Gruber, N., Gürses, Ö., Harris, I., Hefner, M., Houghton, R. A., Hurtt, G. C., Iida, Y., Ilyina, T., Jain, A. K., Jersild, A., Kadono, K., Kato, E., Kennedy, D., Klein Goldewijk, K., Knauer, J., Korsbakken, J. I., Landschützer, P., Lefèvre, N., Lindsay, K., Liu, J., Liu, Z., Marland, G., Mayot, N., McGrath, M. J., Metzl, N., Monacci, N. M., Munro, D. R., Nakaoka, S.-I., Niwa, Y., O'Brien, K., Ono, T., Palmer, P. I., Pan, N., Pierrot, D., Pocock, K., Poulter, B., Resplandy, L., Robertson, E., Rödenbeck, C., Rodriguez, C., Rosan, T. M., Schwinger, J., Séférian, R., Shutler, J. D., Skjelvan, I., Steinhoff, T., Sun, Q., Sutton, A. J., Sweeney, C., Takao, S., Tanhua, T., Tans, P. P., Tian, X., Tian, H., Tilbrook, B., Tsujino, H., Tubiello, F., van der Werf, G. R., Walker, A. P., Wanninkhof, R., Whitehead, C., Willstrand Wranne, A., Wright, R., Yuan, W., Yue, C., Yue, X., Zaehle, S., Zeng, J., and Zheng, B.: Global Carbon Budget 2022, Earth Syst. Sci. Data, 14, 4811-4900, https://doi.org/10.5194/essd-14-4811-2022, 2022.
 
-(Afionis et al.)  
+---
+# References
 
-Growth in emission transfers via international trade from 1990 to 2008
-Glen P Peters 1, Jan C Minx, Christopher L Weber, Ottmar Edenhofer
+Afionis, S., Sakai, M., Scott, K., Barrett, J., & Gouldson, A. (2016). Consumption-based carbon accounting: does it have a future? Wiley Interdisciplinary Reviews: Climate Change, 8(1), [e438]. https://doi.org/10.1002/wcc.438
+
+Peters GP, Minx JC, Weber CL, Edenhofer O. Growth in emission transfers via international trade from 1990 to 2008. Proc Natl Acad Sci U S A. 2011 May 24;108(21):8903-8. doi: 10.1073/pnas.1006388108. Epub 2011 Apr 25. PMID: 21518879; PMCID: PMC3102371.
 
 Karakaya, E., Yılmaz, B. & Alataş, S. How production-based and consumption-based emissions accounting systems change climate policy analysis: the case of CO2 convergence. Environ Sci Pollut Res 26, 16682–16694 (2019). https://doi.org/10.1007/s11356-019-05007-2
 
-Peters et al 2012
+Peters, G. P., Davis, S. J., and Andrew, R.: A synthesis of carbon in international trade, Biogeosciences, 9, 3247–3276, https://doi.org/10.5194/bg-9-3247-2012, 2012.
 
-grasso 
+Peters GP, Hertwich EG. CO2 embodied in international trade with implications for global climate policy. Environ Sci Technol. 2008 Mar 1;42(5):1401-7. doi: 10.1021/es072023k. PMID: 18441780.
+
+Grasso M., Achieving the Paris goals: Consumption-based carbon accounting, Geoforum, Volume 79, 2017, Pages 93-96, ISSN 0016-7185, https://doi.org/10.1016/j.geoforum.2016.12.018.
