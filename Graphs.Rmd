@@ -96,7 +96,7 @@ figure_4
 
 
 ```{r}
-figure_5 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)","Oceania" ))%>%
+figure_5 <- owid %>% filter(!is.na(consumption_co2))%>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)","Oceania", "International transport", "Kuwaiti Oil Fires"))%>%
   filter(year==2018) %>% 
   arrange(desc(consumption_co2)) %>% 
   head(10) %>% 
@@ -113,7 +113,7 @@ ggsave("pics/Fig. 5 consumption by country 2018", plot = figure_5, device = "png
 
 ```{r}
 figure_6 <- owid %>% filter(!is.na(co2)) %>% 
-  filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)",  "Oceania" )) %>%
+  filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)",  "Oceania","International transport", "Kuwaiti Oil Fires")) %>%
   filter(year==2018) %>% 
   arrange(desc(co2)) %>% 
   head(10) %>% 

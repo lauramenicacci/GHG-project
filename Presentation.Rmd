@@ -1,5 +1,5 @@
 ---
-title: "Production vs. consumption-based accounting for greenhouse gas emissions"
+title: "Production vs. consumption-based accounting for CO2 emissions"
 subtitle: 
 author: "Maren Rieker, Anna Weronika Matysiak, Laura Menicacci"
 institute: "Hertie School | Data Perspectives on Greenhouse Gas Emissions"
