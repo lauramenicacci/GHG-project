@@ -201,6 +201,30 @@ htmlwidgets::saveWidget(figure_10, file = "pics/figure_10.html")
 #fastest growing countries in terms of production in absolute terms
 owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2, continent)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%mutate(diff=`2018`-`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))
 
+
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2, continent)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%mutate(diff=`2018`-`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))%>%group_by(continent, country)%>%summarise(cnt = sum(diff, na.rm=T)) %>%
+  mutate(perc = (round(cnt / sum(cnt), 2))*100)%>% arrange(desc(perc))%>%filter(continent=="Asia")
+
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2, continent)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%mutate(diff=`2018`-`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))%>%group_by(continent, country)%>%summarise(cnt = sum(diff, na.rm=T)) %>%
+  mutate(perc = (round(cnt / sum(cnt), 2))*100)%>% arrange(desc(perc))%>%filter(continent=="Europe")
+
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2, continent)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%mutate(diff=`2018`-`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))%>%group_by(continent, country)%>%summarise(cnt = sum(diff, na.rm=T)) %>%
+  mutate(perc = (round(cnt / sum(cnt), 2))*100)%>% arrange(desc(perc))%>%filter(continent=="Africa")
+
+
+
+
+#fastest growing countries in terms of production in absolute terms excluding top 10 emitters
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(!country %in% c("China", "United States","Russia","India","Japan","Germany", "Iran", "South Korea", "Saudi Arabia", "Indonesia"))%>%filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2, continent)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%mutate(diff=`2018`-`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))%>% slice(1:20)
+
+
+#growth in asia
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(!country %in% c("China", "United States", "Russia","India","Indonesia", "Japan", "South Korea", "Iran", "Saudi Arabia"))%>% filter(continent=="Asia")%>%filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2, continent)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%mutate(diff=`2018`-`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))
+
+
+
+
+
 #%>% slice(1:20)
 #mutate_all(~replace(., is.na(.), 0))
 ```
