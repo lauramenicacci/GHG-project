@@ -462,7 +462,7 @@ transform(joiny, Year = as.numeric(Year),
           pb_emissions = as.numeric(pb_emissions),
           cb_emissions = as.numeric(cb_emissions))
 
-joiny %>% 
+figure_00 <- joiny %>% 
   group_by(Region) %>% 
   ggplot(aes(x = Year, y = pb_emissions, color = Region, group = 1)) +
   geom_line() + 
@@ -470,6 +470,8 @@ joiny %>%
   ggtitle("Production-based emissions by Region from 2000-2050") +
   theme_minimal() +
   ylab("CO2 emissions in million tonnes")
+
+ggsave("pics/Fig. 00 emissions by region 2000-2050", plot = figure_00, device = "png", width = 10, height = 8)
 ```
 
 
