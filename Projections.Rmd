@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(readxl)
+library(ggplot2)
 ```
 
 ##Read in and prepare data
@@ -242,7 +243,7 @@ Join the differences in production- and consumption based emissions to ener_owid
 For this: - make regions for df_ratio
 - take average pb/cb ratio per region
 - join data by region
-- clean resulting frame (year)
+- clean resulting frame
 - calculate consumption projections
 ```{r}
 #assign regions in df_ratio
@@ -450,9 +451,27 @@ joiny <- joiny %>%
 joiny <- joiny %>% 
   rename(pb_emissions = value)
 
-joinyc <- joiny %>% 
+joiny <- joiny %>% 
   group_by(Region) %>% 
   mutate(cb_emissions = pb_emissions*ratio_avg)
 ```
+
+Graphical display of results:
+```{r}
+transform(joiny, Year = as.numeric(Year),
+          pb_emissions = as.numeric(pb_emissions),
+          cb_emissions = as.numeric(cb_emissions))
+
+joiny %>% 
+  group_by(Region) %>% 
+  ggplot(aes(x = Year, y = pb_emissions, color = Region, group = 1)) +
+  geom_line() + 
+  scale_color_brewer() +
+  ggtitle("Production-based emissions by Region from 2000-2050") +
+  theme_minimal() +
+  ylab("CO2 emissions in million tonnes")
+```
+
+
 
 
