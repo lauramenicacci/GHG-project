@@ -366,7 +366,7 @@ df_ratio <- df_diff %>%
   select(country, continent, year, consumption_co2, co2, abs_diff) %>% 
   filter(year == 2018) %>% 
   filter(!is.na(consumption_co2) & !is.na(co2)) %>%
-  mutate(ratio_pb_cb = co2/consumption_co2)
+  mutate(ratio_pb_cb = consumption_co2/co2)
 
 #the resulting ratio from the latest data point we have (2018) will be used to linearly predict the consumption based emissions
 ```
