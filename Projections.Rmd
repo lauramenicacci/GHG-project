@@ -434,9 +434,25 @@ df_ratio <- df_ratio %>%
   group_by(Region) %>% 
   mutate(ratio_avg = mean(ratio_pb_cb))
 
+df_ratio <- df_ratio %>% 
+  select(-c(country, continent, year, consumption_co2, co2, abs_diff, ratio_pb_cb))
+
 #join df_ratio and ener_owid
 joiny <- left_join(ener_owid, df_ratio, by = "Region")
-joiny %>% select(-c())
+joiny <- joiny %>% 
+  select(-c(population, consumption_co2, consumption_co2_per_capita, consumption_co2_per_gdp, `Change in %/year`))
+
+#keep only one row per year -> ener_data1 format
+joiny <- joiny %>% 
+  distinct()
+
+#calculate projected consumption-based emissions
+joiny <- joiny %>% 
+  rename(pb_emissions = value)
+
+joinyc <- joiny %>% 
+  group_by(Region) %>% 
+  mutate(cb_emissions = pb_emissions*ratio_avg)
 ```
 
 
