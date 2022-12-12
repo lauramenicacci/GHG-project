@@ -237,12 +237,12 @@ owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (exc
 ```
 
 ```{r}
-#annual ercentage growth rate of CO2 production per country in the time range 1990-2018
-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`)) %>% mutate(`growth_rate(%)`=((`2018`-`1990`)/`1990`)/28*100)%>%arrange(desc(`growth_rate(%)`))
+#average annual percentage growth rate of CO2 production per country in the time range 1990-2018
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`)) %>% mutate(`avg_growth_rate(%)`=((`2018`-`1990`)/`1990`)/28*100)%>%arrange(desc(`avg_growth_rate(%)`))
 ```
 
 ```{r}
-#annual percentage growth rate of CO2 production per capita per country in the time range 1990-2018
+#average annual percentage growth rate of CO2 production per capita per country in the time range 1990-2018
 df_base<-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`))
 
 
