@@ -34,7 +34,7 @@ ener_data1 <- ener_data1 %>%
 ##Bring in consumption based accounting and calculate own projections
 
 ```{r}
-#load owid from Graphs.Rmd and drop everything but the consumption based emissions
+#load owid from Graphs.Rmd and drop everything but the consumption based emissions - the owid set here is after the second code chunk with countrycodes!
 owid_con <- owid %>% 
 #  na.omit() %>% 
   select(-c(cement_co2:coal_co2_per_capita, cumulative_cement_co2:gdp_per_capita, gdp))
@@ -42,7 +42,8 @@ owid_con <- owid %>%
 #to join this to enerdata, we need the region variable (provided in the excel)
 owid_con <- owid_con %>% 
   mutate(Region = 
-           case_when(country == "Austria" ~ "Europe", #girls i think i'm too stupid to figure out the or statement here... fix tomorrow
+           case_when(country == "Albania" ~ "Europe",
+                     country == "Austria" ~ "Europe", #girls i think i'm too stupid to figure out the or statement here... fix tomorrow
                      country == "Belgium" ~ "Europe",
                      country == "Bulgaria" ~ "Europe",
                      country == "Croatia" ~ "Europe",
@@ -61,6 +62,7 @@ owid_con <- owid_con %>%
                      country == "Latvia" ~ "Europe",
                      country == "Lithuania" ~ "Europe",
                      country == "Luxembourg" ~ "Europe",
+                     country == "Malta" ~ "Europe",
                      country == "Netherlands" ~ "Europe",
                      country == "Norway" ~ "Europe",
                      country == "Poland" ~ "Europe",
@@ -226,3 +228,215 @@ owid_con <- owid_con %>% drop_na()
 
 
 Next steps: join, ratio production-consumption linear in the future
+
+Join owid_con and ener_data1
+```{r}
+#i use inner join because we only want to keep the countries that match; don't need nas for the others
+ener_owid <- inner_join(ener_data1, owid_con, by = "Region") 
+
+ener_owid <- ener_owid %>% 
+  select(-c(Unit, country, year, iso_code, continent))
+```
+
+Join the differences in production- and consumption based emissions to ener_owid (from df_ratio)
+For this: - make regions for df_ratio
+- take average pb/cb ratio per region
+- join data by region
+- clean resulting frame (year)
+- calculate consumption projections
+```{r}
+#assign regions in df_ratio
+df_ratio <- df_ratio %>% 
+  mutate(Region = 
+           case_when(country == "Albania" ~ "Europe",
+                     country == "Austria" ~ "Europe",
+                     country == "Belgium" ~ "Europe",
+                     country == "Bulgaria" ~ "Europe",
+                     country == "Croatia" ~ "Europe",
+                     country == "Cyprus" ~ "Europe",
+                     country == "Czechia" ~ "Europe",
+                     country == "Denmark" ~ "Europe",
+                     country == "Estonia" ~ "Europe",
+                     country == "Finland" ~ "Europe",
+                     country == "France" ~ "Europe",
+                     country == "Germany" ~ "Europe",
+                     country == "Greece" ~ "Europe",
+                     country == "Hungary" ~ "Europe",
+                     country == "Iceland" ~ "Europe",
+                     country == "Italy" ~ "Europe",
+                     country == "Ireland" ~ "Europe",
+                     country == "Latvia" ~ "Europe",
+                     country == "Lithuania" ~ "Europe",
+                     country == "Luxembourg" ~ "Europe",
+                     country == "Malta" ~ "Europe",
+                     country == "Netherlands" ~ "Europe",
+                     country == "Norway" ~ "Europe",
+                     country == "Poland" ~ "Europe",
+                     country == "Portugal" ~ "Europe",
+                     country == "Romania" ~ "Europe",
+                     country == "Slovakia" ~ "Europe",
+                     country == "Slovenia" ~ "Europe",
+                     country == "Spain" ~ "Europe",
+                     country == "Sweden" ~ "Europe",
+                     country == "Switzerland" ~ "Europe",
+                     country == "Turkey" ~ "Europe",
+                     country == "United Kingdom" ~ "Europe",
+                     country == "Afghanistan" ~ "Asia-Pacific",
+                     country == "Bangladesh" ~ "Asia-Pacific",
+                     country == "Bhutan" ~ "Asia-Pacific",
+                     country == "Brunei" ~ "Asia-Pacific",
+                     country == "Cambodia" ~ "Asia-Pacific",
+                     country == "China" ~ "Asia-Pacific",
+                     country == "Hong Kong" ~ "Asia-Pacific",
+                     country == "India" ~ "Asia-Pacific",
+                     country == "Indonesia" ~ "Asia-Pacific",
+                     country == "Japan" ~ "Asia-Pacific",
+                     country == "North Korea" ~ "Asia-Pacific",
+                     country == "South Korea" ~ "Asia-Pacific",
+                     country == "Laos" ~ "Asia-Pacific",
+                     country == "Malaysia" ~ "Asia-Pacific",
+                     country == "Maldives" ~ "Asia-Pacific",
+                     country == "Mongolia" ~ "Asia-Pacific",
+                     country == "Myanmar" ~ "Asia-Pacific",
+                     country == "Nepal" ~ "Asia-Pacific",
+                     country == "Pakistan" ~ "Asia-Pacific",
+                     country == "Philippines" ~ "Asia-Pacific",
+                     country == "Singapore" ~ "Asia-Pacific",
+                     country == "Sri Lanka" ~ "Asia-Pacific",
+                     country == "Taiwan" ~ "Asia-Pacific",
+                     country == "Thailand" ~ "Asia-Pacific",
+                     country == "Vietnam" ~ "Asia-Pacific",
+                     country == "Australia" ~ "Asia-Pacific",
+                     country == "Fiji" ~ "Asia-Pacific",
+                     country == "Kiribati" ~ "Asia-Pacific",
+                     country == "Papua New Guinea" ~ "Asia-Pacific",
+                     country == "Samoa" ~ "Asia-Pacific",
+                     country == "Solomon Islands" ~ "Asia-Pacific",
+                     country == "Tonga" ~ "Asia-Pacific",
+                     country == "Vanuatu" ~ "Asia-Pacific",
+                     country == "New Zealand" ~ "Asia-Pacific",
+                     country == "Algeria" ~ "Africa",
+                     country == "Angola" ~ "Africa",
+                     country == "Benin" ~ "Africa",
+                     country == "Botswana" ~ "Africa",
+                     country == "Burkina Faso" ~ "Africa",
+                     country == "Burundi" ~ "Africa",
+                     country == "Central African Republic" ~ "Africa",
+                     country == "Cameroon" ~ "Africa",
+                     country == "Cape Verde" ~ "Africa",
+                     country == "Chad" ~ "Africa",
+                     country == "Congo" ~ "Africa",
+                     country == "Democratic Republic of Congo" ~ "Africa",
+                     country == "Comoros" ~ "Africa",
+                     country == "Cote d'Ivoire" ~ "Africa",
+                     country == "Djibouti" ~ "Africa",
+                     country == "Egypt" ~ "Africa",
+                     country == "Eritrea" ~ "Africa",
+                     country == "Ethiopia" ~ "Africa",
+                     country == "Gabon" ~ "Africa",
+                     country == "Ghana" ~ "Africa",
+                     country == "Guinea" ~ "Africa",
+                     country == "Gambia" ~ "Africa",
+                     country == "Guinea-Bissau" ~ "Africa",
+                     country == "Equatorial Guinea" ~ "Africa",
+                     country == "Kenya" ~ "Africa",
+                     country == "Lesotho" ~ "Africa",
+                     country == "Liberia" ~ "Africa",
+                     country == "Libya" ~ "Africa",
+                     country == "Madagascar" ~ "Africa",
+                     country == "Malawi" ~ "Africa",
+                     country == "Mali" ~ "Africa",
+                     country == "Mauritania" ~ "Africa",
+                     country == "Mauritius" ~ "Africa",
+                     country == "Morocco" ~ "Africa",
+                     country == "Mozambique" ~ "Africa",
+                     country == "Namibia" ~ "Africa",
+                     country == "Niger" ~ "Africa",
+                     country == "Nigeria" ~ "Africa",
+                     country == "Rwanda" ~ "Africa",
+                     country == "Senegal" ~ "Africa",
+                     country == "Seychelles" ~ "Africa",
+                     country == "Sierra Leone" ~ "Africa",
+                     country == "Somalia" ~ "Africa",
+                     country == "Sao Tome and Principe" ~ "Africa",
+                     country == "Sudan" ~ "Africa",
+                     country == "Swaziland" ~ "Africa",
+                     country == "South Africa" ~ "Africa",
+                     country == "Tanzania" ~ "Africa",
+                     country == "Togo" ~ "Africa",
+                     country == "Tunisia" ~ "Africa",
+                     country == "Uganda" ~ "Africa",
+                     country == "Zambia" ~ "Africa",
+                     country == "Zimbabwe" ~ "Africa",
+                     country == "Bahrain" ~ "Middle-East",
+                     country == "Iran" ~ "Middle-East",
+                     country == "Iraq" ~ "Middle-East",
+                     country == "Israel" ~ "Middle-East",
+                     country == "Jordan" ~ "Middle-East",
+                     country == "Kuwait" ~ "Middle-East",
+                     country == "Lebanon" ~ "Middle-East",
+                     country == "Oman" ~ "Middle-East",
+                     country == "Qatar" ~ "Middle-East",
+                     country == "Saudi Arabia" ~ "Middle-East",
+                     country == "Syria" ~ "Middle-East",
+                     country == "United Arab Emirates" ~ "Middle-East",
+                     country == "Yemen" ~ "Middle-East",
+                     country == "Canada" ~ "North America",
+                     country == "United States" ~ "North America",
+                     country == "Argentina" ~ "Latin America",
+                     country == "Bahamas" ~ "Latin America",
+                     country == "Belize" ~ "Latin America",
+                     country == "Bermuda" ~ "Latin America",
+                     country == "Barbados" ~ "Latin America",
+                     country == "Bolivia" ~ "Latin America",
+                     country == "Brazil" ~ "Latin America",
+                     country == "Chile" ~ "Latin America",
+                     country == "Colombia" ~ "Latin America",
+                     country == "Costa Rica" ~ "Latin America",
+                     country == "Cuba" ~ "Latin America",
+                     country == "Dominica" ~ "Latin America",
+                     country == "Dominican Republic" ~ "Latin America",
+                     country == "Ecuador" ~ "Latin America",
+                     country == "Grenada" ~ "Latin America",
+                     country == "Guatemala" ~ "Latin America",
+                     country == "Guyana" ~ "Latin America",
+                     country == "Honduras" ~ "Latin America",
+                     country == "Haiti" ~ "Latin America",
+                     country == "Jamaica" ~ "Latin America",
+                     country == "Saint Lucia" ~ "Latin America",
+                     country == "Mexico" ~ "Latin America",
+                     country == "Nicaragua" ~ "Latin America",
+                     country == "Aruba" ~ "Latin America",
+                     country == "Panama" ~ "Latin America",
+                     country == "Paraguay" ~ "Latin America",
+                     country == "Peru" ~ "Latin America",
+                     country == "El Salvador" ~ "Latin America",
+                     country == "Suriname" ~ "Latin America",
+                     country == "Trinidad and Tobago" ~ "Latin America",
+                     country == "Uruguay" ~ "Latin America",
+                     country == "Venezuela" ~ "Latin America",
+                     country == "Saint Vincent and the Grenadines" ~ "Latin America",
+                     country == "Armenia" ~ "CIS",
+                     country == "Azerbaijan" ~ "CIS",
+                     country == "Belarus" ~ "CIS",
+                     country == "Georgia" ~ "CIS",
+                     country == "Kazakhstan" ~ "CIS",
+                     country == "Kyrgyzstan" ~ "CIS",
+                     country == "Moldova" ~ "CIS",
+                     country == "Russia" ~ "CIS",
+                     country == "Tajikistan" ~ "CIS",
+                     country == "Turkmenistan" ~ "CIS",
+                     country == "Ukraine" ~ "CIS",
+                     country == "Uzbekistan" ~ "CIS"))
+
+#calculate average production-consumption ratio per region
+df_ratio <- df_ratio %>% 
+  group_by(Region) %>% 
+  mutate(ratio_avg = mean(ratio_pb_cb))
+
+#join df_ratio and ener_owid
+joiny <- left_join(ener_owid, df_ratio, by = "Region")
+joiny %>% select(-c())
+```
+
+

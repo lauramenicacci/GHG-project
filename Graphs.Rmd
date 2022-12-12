@@ -314,7 +314,7 @@ owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (exc
 df_base_consumption<-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, consumption_co2, continent)%>% pivot_wider(names_from = year, values_from = consumption_co2)%>% filter(!is.na(`2018`) & !is.na(`1990`))
 
 
-df_consumption_gdp<-left_join(df_base_consumption, df_gdp, by="country")
+df_consumption_gdp <- left_join(df_base_consumption, df_gdp, by="country")
 
 df_consumption_gdp<-df_consumption_gdp%>%
   mutate(`growth_rate_gdp(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
@@ -348,6 +348,22 @@ df_consumption_relative
 
 CONSUMPTION VS. PRODUCTION
 
+absolute difference:
 ```{r}
-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>%select(country, continent, year, consumption_co2,co2)%>% filter(year==2018)%>% filter(!is.na(consumption_co2) & !is.na(co2))%>%mutate(abs_diff=abs(consumption_co2-co2))%>%arrange(desc(abs_diff))
+df_diff <- owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>%select(country, continent, year, consumption_co2,co2)%>% filter(year==2018)%>% filter(!is.na(consumption_co2) & !is.na(co2))%>%mutate(abs_diff=abs(consumption_co2-co2))%>%arrange(desc(abs_diff))
 ```
+
+relative difference:
+```{r}
+df_ratio <- df_diff %>% 
+  filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica")) %>%
+  select(country, continent, year, consumption_co2, co2, abs_diff) %>% 
+  filter(year == 2018) %>% 
+  filter(!is.na(consumption_co2) & !is.na(co2)) %>%
+  mutate(ratio_pb_cb = co2/consumption_co2)
+
+#the resulting ratio from the latest data point we have (2018) will be used to linearly predict the consumption based emissions
+```
+
+
+
