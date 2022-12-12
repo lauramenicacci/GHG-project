@@ -66,3 +66,10 @@ df_production_2<-df_production_2%>%
 
 
 df_production_2
+
+
+
+owid %>% filter(country %in% c("High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries"))%>% 
+  filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%
+  mutate(diff=(`2018`-`1990`)/`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))%>%group_by(country)%>%summarise(cnt = sum(diff, na.rm=T)) %>%
+  mutate(perc = (round(cnt / sum(cnt), 2))*100)%>% arrange(desc(perc))
