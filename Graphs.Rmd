@@ -197,7 +197,7 @@ figure_10
 htmlwidgets::saveWidget(figure_10, file = "pics/figure_10.html")
 ```
 
-Production in absolute terms
+Production analysis
 
 ```{r}
 owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year ==2018)%>% 
@@ -237,21 +237,21 @@ owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (exc
 ```
 
 ```{r}
-#average annual percentage growth rate of CO2 production per country in the time range 1990-2018
-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`)) %>% mutate(`avg_growth_rate(%)`=((`2018`-`1990`)/`1990`)/28*100)%>%arrange(desc(`avg_growth_rate(%)`))
+#Average Annual (Compound) Growth Rates in % of CO2 production per country in the time range 1990-2018
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`)) %>% mutate(`avg_growth_rate(%)`=(((`2018`/`1990`)^(1/(2018-1990))-1))*100)%>%arrange(desc(`avg_growth_rate(%)`))
 ```
 
 ```{r}
-#average annual percentage growth rate of CO2 production per capita per country in the time range 1990-2018
-df_base<-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`))
+#Average Annual (Compound) Growth Rates in % of CO2 production per capita in the time range 1990-2018
 
+df_base<-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2, continent)%>% pivot_wider(names_from = year, values_from = co2)%>% filter(!is.na(`2018`) & !is.na(`1990`))
 
 df_population<-owid%>%select(population, country, year)%>%filter(year %in% c(1990, 2018))%>%pivot_wider(names_from = year, values_from = population)
 df_production_relative<-left_join(df_base, df_population, by="country")
 
 df_production_relative<-df_production_relative%>%
-  mutate(`growth_rate_pcapita(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
-  rename(pop_18=`2018.y`)%>% rename(pop_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_pcapita(%)`))
+  mutate(`avg_growth_rate_pcapita(%)`=(((`2018.x`/`2018.y`)/(`1990.x`/`1990.y`))^(1/(2018-1990))-1)*100) %>%
+  rename(pop_18=`2018.y`)%>% rename(pop_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`avg_growth_rate_pcapita(%)`))
 
 
 df_production_relative
@@ -263,32 +263,32 @@ owid %>% filter(country %in% c("High-income countries", "Upper-middle-income cou
 ```
 
 ```{r}
-#annual percentage growth rate rate per income group
-owid %>% filter(country %in% c("High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2)%>% pivot_wider(names_from = year, values_from = co2)%>%mutate(growth_rate=((`2018`-`1990`)/`1990`)/28*100)%>%arrange(desc(growth_rate))%>% filter(!is.na(`2018`) & !is.na(`1990`))
+#Average Annual (Compound) Growth Rates in % of CO2 production per income group in the time range 1990-2018
+owid %>% filter(country %in% c("High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, co2)%>% pivot_wider(names_from = year, values_from = co2)%>%mutate(`avg_growth_rate(%)`=(((`2018`/`1990`)^(1/(2018-1990))-1))*100) %>%arrange(desc(`avg_growth_rate(%)`))%>% filter(!is.na(`2018`) & !is.na(`1990`))
 ```
 
 ```{r}
-#annual percentage growth rate accounting for gdp
+#Average Annual (Compound) Growth Rates in % of CO2 production per gdp in the time range 1990-2018
 df_gdp<-owid%>%select(gdp, country, year)%>%filter(year %in% c(1990, 2018))%>%pivot_wider(names_from = year, values_from = gdp)
 df_production_gdp<-left_join(df_base, df_gdp, by="country")
 
 df_production_gdp<-df_production_gdp%>%
-  mutate(`growth_rate_gdp(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
-  rename(gdp_18=`2018.y`)%>% rename(gdp_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_gdp(%)`))
+  mutate(`avg_growth_rate_gdp(%)`=((((`2018.x`/`2018.y`)/(`1990.x`/`1990.y`))^(1/(2018-1990))-1))*100)%>%
+  rename(gdp_18=`2018.y`)%>% rename(gdp_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`avg_growth_rate_gdp(%)`))
 
 
 df_production_gdp
 ```
 
 ```{r}
-#annual annual percentage growth rate accounting for gdp per capita
+#Average Annual (Compound) Growth Rates in % of CO2 production per gdp per capita in the time range 1990-2018
 
 df_gdp_cap<-owid%>%select(gdp_per_capita, country, year)%>%filter(year %in% c(1990, 2018))%>%pivot_wider(names_from = year, values_from = gdp_per_capita)
 df_production_gdp_cap<-left_join(df_base, df_gdp_cap, by="country")
 
 df_production_gdp_cap<-df_production_gdp_cap%>%
-  mutate(`growth_rate_gdp_pcapita(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
-  rename(gdpcap_18=`2018.y`)%>% rename(gdpcap_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_gdp_pcapita(%)`))
+  mutate(`avg_growth_rate_gdp_pcapita(%)`=((((`2018.x`/`2018.y`)/(`1990.x`/`1990.y`))^(1/(2018-1990))-1))*100)%>%
+  rename(gdpcap_18=`2018.y`)%>% rename(gdpcap_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`avg_growth_rate_gdp_pcapita(%)`))
 
 
 df_production_gdp_cap
@@ -307,40 +307,46 @@ df_consumption_base
 ```
 
 ```{r}
+#Average Annual (Compound) Growth Rates in % of CO2 consumption per country in the time range 1990-2018
 owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>%select(country, year, consumption_co2)%>%filter(year %in% c(1990, 2018))%>% pivot_wider(names_from = year, values_from = consumption_co2)%>% 
-  filter(!is.na(`2018`) & !is.na(`1990`))%>%mutate(growth_rate=((`2018`-`1990`)/`1990`)/28*100)%>%arrange(desc(growth_rate))
+  filter(!is.na(`2018`) & !is.na(`1990`))%>%mutate(`avg_growth_rate(%)`=(((`2018`/`1990`)^(1/(2018-1990))-1))*100)%>%arrange(desc(`avg_growth_rate(%)`))
 ```
+
 ```{r}
+#Average Annual (Compound) Growth Rates in % of CO2 consumption per gdp in the time range 1990-2018
 df_base_consumption<-owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990, 2018))%>% select(country, year, consumption_co2, continent)%>% pivot_wider(names_from = year, values_from = consumption_co2)%>% filter(!is.na(`2018`) & !is.na(`1990`))
 
 
 df_consumption_gdp <- left_join(df_base_consumption, df_gdp, by="country")
 
 df_consumption_gdp<-df_consumption_gdp%>%
-  mutate(`growth_rate_gdp(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
-  rename(gdp_18=`2018.y`)%>% rename(gdp_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_gdp(%)`))
+  mutate(`avg_growth_rate_gdp(%)`=((((`2018.x`/`2018.y`)/(`1990.x`/`1990.y`))^(1/(2018-1990))-1))*100)%>%
+  rename(gdp_18=`2018.y`)%>% rename(gdp_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`avg_growth_rate_gdp(%)`))
 
 
 df_consumption_gdp
 ```
 
 ```{r}
+#Average Annual (Compound) Growth Rates in % of CO2 consumption per gdp per capita
 df_consumption_gdp_cap<-left_join(df_base_consumption, df_gdp_cap, by="country")
 
 df_consumption_gdp_cap<-df_consumption_gdp_cap%>%
-  mutate(`growth_rate_gdp_pcapita(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
-  rename(gdpcap_18=`2018.y`)%>% rename(gdpcap_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_gdp_pcapita(%)`))
+  mutate(`avg_growth_rate_gdp_pcapita(%)`=(((`2018.x`/`2018.y`)/(`1990.x`/`1990.y`))^(1/(2018-1990))-1)*100)%>%
+  rename(gdpcap_18=`2018.y`)%>% rename(gdpcap_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`avg_growth_rate_gdp_pcapita(%)`))
 
 
 df_consumption_gdp_cap
 ```
 
 ```{r}
+#Average Annual (Compound) Growth Rates in % of CO2 consumption per capita in the time range 1990-2018
+
 df_consumption_relative<-left_join(df_base_consumption, df_population, by="country")
 
 df_consumption_relative<-df_consumption_relative%>%
-  mutate(`growth_rate_pcapita(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
-  rename(pop_18=`2018.y`)%>% rename(pop_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_pcapita(%)`))
+  mutate(`avg_growth_rate_pcapita(%)`=(((`2018.x`/`2018.y`)/(`1990.x`/`1990.y`))^(1/(2018-1990))-1)*100)%>%
+  rename(pop_18=`2018.y`)%>% rename(pop_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`avg_growth_rate_pcapita(%)`))
 
 
 df_consumption_relative
