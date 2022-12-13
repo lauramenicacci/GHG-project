@@ -73,3 +73,14 @@ owid %>% filter(country %in% c("High-income countries", "Upper-middle-income cou
   filter(year %in% c(1990, 2018))%>% select(country, year, cumulative_co2)%>% pivot_wider(names_from = year, values_from = cumulative_co2)%>%
   mutate(diff=(`2018`-`1990`)/`1990`)%>%arrange(desc(diff))%>% filter(!is.na(`2018`) & !is.na(`1990`))%>%group_by(country)%>%summarise(cnt = sum(diff, na.rm=T)) %>%
   mutate(perc = (round(cnt / sum(cnt), 2))*100)%>% arrange(desc(perc))
+
+
+df_gdp<-owid%>%select(gdp, country, year)%>%filter(year %in% c(1990, 2018))%>%pivot_wider(names_from = year, values_from = gdp)
+df_production_gdp<-left_join(df_base, df_gdp, by="country")
+
+df_production_gdp<-df_production_gdp%>%
+  mutate(`growth_rate_gdp(%)`=(((`2018.x`/`2018.y`) - (`1990.x`/`1990.y`))/(`1990.x`/`1990.y`))/28*100)%>%
+  rename(gdp_18=`2018.y`)%>% rename(gdp_90=`1990.y`)%>%rename(emiss_18=`2018.x`)%>%rename(emiss_90=`1990.x`)%>% arrange(desc(`growth_rate_gdp(%)`))
+
+
+df_production_gdp

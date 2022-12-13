@@ -129,9 +129,49 @@ ggsave("pics/Fig. 6 production by country 2018", plot = figure_6, device = "png"
 
 
 ```{r}
+figure_12 <- owid %>% filter(!is.na(co2)) %>% 
+  filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia", "Australia", "Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "North America (excl. USA)",  "Oceania", "Antarctica")) %>%
+  filter(year==2018) %>% 
+  arrange(desc(co2_per_gdp)) %>% 
+  head(10) %>% 
+  ggplot(.,aes(x=co2_per_gdp,y=reorder(country,co2_per_gdp))) +
+  geom_col(color="#636363",fill="#490A3D") +
+  theme_bw() +
+  theme(axis.title.y = element_blank()) +
+  xlab("") +
+  ggtitle("Production of CO2 per gdp in 2018")
+
+ggsave("pics/Fig. 12", plot = figure_12, device = "jpg", width = 10, height = 8)
+```
+
+```{r}
+df_consumption_gdp%>%select(emiss_18, gdp_18, country)%>%mutate(emiss_per_gdp=emiss_18/gdp_18)%>%
+  arrange(desc(emiss_per_gdp)) %>% 
+  head(10) %>% 
+  ggplot(.,aes(x=emiss_per_gdp,y=reorder(country,emiss_per_gdp))) +
+  geom_col(color="#636363",fill="#BD1550") +
+  theme_bw() +
+  theme(axis.title.y = element_blank()) +
+  xlab("") +
+  ggtitle("Consumption of CO2 per gdp in 2018")
+
+
+```
+
+```{r}
 figure_5
 figure_6
+figure_12
 ```
+
+Which states contribute to production-based emissions and consumption-based emissions the most? Are these the same states? What are the differences?
+How does this change when we look at the regions? Which regions produce/consume the most?
+What are the differences in share between states with the highest and lowest GDP (per capita)?
+
+
+Comparing the production and consumption of the CO2 per country in absolute terms, the to 10 states that are biggest emitters in both categories are the same 10 states. The biggest emissions in terms of consumed as well as produced CO2 in 2018 was noted in China followed by US an India (fig.x). However, when we look at at the production of CO2 emissions per gdp of a country, the biggest emitters even before China are Trinidad and Tobago, Mongolia and South Africa (fig.x). When we look at the emissions from the perspective of the consumption, Luxembourg and Estonia move way up before China. Zooming out to understand more the global patterns, this paper explores the country and regional trends. Looking at the absolute values per world regions, it is aparent that the biggest emittors mainly China and the USA have major influence at the total regional emissions (fig.x)
+ 
+
 
 ```{r message=FALSE, warning=FALSE}
 figure_7 <- owid %>% filter(year>=1990 & year<=2018) %>%
@@ -209,6 +249,7 @@ owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (exc
   select(country, continent, co2_per_gdp) %>% arrange(desc(co2_per_gdp))
 
 ```
+
 ```{r}
 owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year ==2018)%>% 
   select(country, continent, co2, gdp_per_capita) %>% mutate(co2_per_gdp_per_capita=co2/gdp_per_capita)%>%arrange(desc(co2_per_gdp_per_capita))
@@ -280,6 +321,8 @@ df_production_gdp<-df_production_gdp%>%
 df_production_gdp
 ```
 
+
+
 ```{r}
 #Average Annual (Compound) Growth Rates in % of CO2 production per gdp per capita in the time range 1990-2018
 
@@ -306,11 +349,19 @@ df_consumption_base<-owid %>% filter(!country %in% c("World", "Africa", "North A
 df_consumption_base 
 ```
 
+
+```{r}
+owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>% filter(year %in% c(1990: 2018))%>% select(country, year, consumption_co2, continent)%>% group_by(continent, country)%>%summarise(cnt = sum(consumption_co2, na.rm=T)) %>%
+  mutate(perc = (round(cnt / sum(cnt), 2))*100)%>% arrange(desc(perc))%>%filter(continent=="Africa")
+
+```
+
 ```{r}
 #Average Annual (Compound) Growth Rates in % of CO2 consumption per country in the time range 1990-2018
 owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>%select(country, year, consumption_co2)%>%filter(year %in% c(1990, 2018))%>% pivot_wider(names_from = year, values_from = consumption_co2)%>% 
   filter(!is.na(`2018`) & !is.na(`1990`))%>%mutate(`avg_growth_rate(%)`=(((`2018`/`1990`)^(1/(2018-1990))-1))*100)%>%arrange(desc(`avg_growth_rate(%)`))
 ```
+
 
 ```{r}
 #Average Annual (Compound) Growth Rates in % of CO2 consumption per gdp in the time range 1990-2018
@@ -325,7 +376,12 @@ df_consumption_gdp<-df_consumption_gdp%>%
 
 
 df_consumption_gdp
+
+
+new33<-df_consumption_gdp%>%mutate(conumuption_co2_gdp=emiss_18/gdp_18)%>%arrange(desc(conumuption_co2_gdp))
+new33
 ```
+
 
 ```{r}
 #Average Annual (Compound) Growth Rates in % of CO2 consumption per gdp per capita
@@ -337,6 +393,8 @@ df_consumption_gdp_cap<-df_consumption_gdp_cap%>%
 
 
 df_consumption_gdp_cap
+
+
 ```
 
 ```{r}
@@ -359,6 +417,7 @@ absolute difference:
 df_diff <- owid %>% filter(!country %in% c("World", "Africa", "North America", "Europe (excl. EU-28)", "South America", "Asia","Asia (excl. China & India)", "European Union (28)", "Europe","Europe (excl. EU-27)", "European Union (27)", "High-income countries", "Upper-middle-income countries", "Lower-middle-income countries","Low-income countries", "North America (excl. USA)", "Oceania", "Antarctica"))%>%select(country, continent, year, consumption_co2,co2)%>% filter(year==2018)%>% filter(!is.na(consumption_co2) & !is.na(co2))%>%mutate(abs_diff=abs(consumption_co2-co2))%>%arrange(desc(abs_diff))
 ```
 
+<<<<<<< Updated upstream
 relative difference:
 ```{r}
 df_ratio <- df_diff %>% 
@@ -370,6 +429,8 @@ df_ratio <- df_diff %>%
 
 #the resulting ratio from the latest data point we have (2018) will be used to linearly predict the consumption based emissions
 ```
+=======
+>>>>>>> Stashed changes
 
 
 
